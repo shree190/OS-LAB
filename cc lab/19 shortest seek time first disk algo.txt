@@ -1,0 +1,44 @@
+19. Shortest Seek Time First (SSTF) Disk Scheduling
+This program calculates total seek time for SSTF disk scheduling.
+c
+Copy code
+#include <stdio.h>
+#include <stdlib.h>
+
+int findClosestRequest(int requests[], int n, int head, int served[]) {
+    int min_distance = 9999, pos = -1;
+    for (int i = 0; i < n; i++) {
+        if (!served[i] && abs(requests[i] - head) < min_distance) {
+            min_distance = abs(requests[i] - head);
+            pos = i;
+        }
+    }
+    return pos;
+}
+
+int main() {
+    int n, head;
+    printf("Enter number of disk requests: ");
+    scanf("%d", &n);
+
+    int requests[n], served[n];
+    printf("Enter disk requests:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+        served[i] = 0;
+    }
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    int total_seek_time = 0;
+    for (int i = 0; i < n; i++) {
+        int pos = findClosestRequest(requests, n, head, served);
+        total_seek_time += abs(requests[pos] - head);
+        head = requests[pos];
+        served[pos] = 1;
+    }
+
+    printf("Total seek time: %d\n", total_seek_time);
+    return 0;
+}

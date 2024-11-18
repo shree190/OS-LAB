@@ -1,0 +1,44 @@
+24. Program to Copy Contents of File Character by Character and Line by Line
+This C program reads a file and copies its contents to another file character by character and line by line.
+c
+Copy code
+#include <stdio.h>
+
+int main() {
+    FILE *source, *dest;
+    char ch;
+
+    source = fopen("source.txt", "r");
+    dest = fopen("destination.txt", "w");
+
+    if (source == NULL || dest == NULL) {
+        printf("Error opening file.\n");
+        return 1;
+    }
+
+    printf("Copying character by character:\n");
+    while ((ch = fgetc(source)) != EOF) {
+        fputc(ch, dest);
+        putchar(ch);  // Display on screen
+    }
+
+    fclose(source);
+    fclose(dest);
+
+    // Line by Line Copy
+    source = fopen("source.txt", "r");
+    dest = fopen("destination_line.txt", "w");
+    char line[256];
+
+    printf("\nCopying line by line:\n");
+    while (fgets(line, sizeof(line), source) != NULL) {
+        fputs(line, dest);
+        printf("%s", line);  // Display on screen
+    }
+
+    fclose(source);
+    fclose(dest);
+
+    printf("\nCopy complete.\n");
+    return 0;
+}

@@ -1,0 +1,35 @@
+2. Program Demonstrating System Calls in C
+
+This program demonstrates the use of system calls like `open`, `read`, `write`, and `close`.
+
+```c
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+
+int main() {
+    int file;
+    char buffer[100];
+
+    // Open file with an absolute path to avoid directory issues
+    file = open("/tmp/example.txt", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    if (file < 0) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    // Write to file
+    const char *text = "Hello, System Calls!";
+    write(file, text, strlen(text));
+
+    // Reset file pointer and read from file
+    lseek(file, 0, SEEK_SET);
+    read(file, buffer, sizeof(buffer));
+    printf("File content: %s\n", buffer);
+
+    // Close file
+    close(file);
+
+    return 0;
+}

@@ -1,0 +1,58 @@
+16. LRU Page Replacement Algorithm
+This program calculates the number of page faults using LRU.
+c
+Copy code
+#include <stdio.h>
+
+int findLRU(int time[], int n) {
+    int min = time[0], pos = 0;
+    for (int i = 1; i < n; i++) {
+        if (time[i] < min) {
+            min = time[i];
+            pos = i;
+        }
+    }
+    return pos;
+}
+
+int main() {
+    int n, frames;
+    printf("Enter number of page references: ");
+    scanf("%d", &n);
+
+    int pages[n];
+    printf("Enter page references:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d", &frames);
+
+    int memory[frames], time[frames], faults = 0, counter = 0;
+    for (int i = 0; i < frames; i++) {
+        memory[i] = -1;
+        time[i] = 0;
+    }
+
+    for (int i = 0; i < n; i++) {
+        int found = 0;
+        for (int j = 0; j < frames; j++) {
+            if (memory[j] == pages[i]) {
+                found = 1;
+                time[j] = ++counter;
+                break;
+            }
+        }
+
+        if (!found) {
+            int pos = findLRU(time, frames);
+            memory[pos] = pages[i];
+            time[pos] = ++counter;
+            faults++;
+        }
+    }
+
+    printf("Total page faults: %d\n", faults);
+    return 0;
+}
+

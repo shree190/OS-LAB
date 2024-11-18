@@ -1,0 +1,46 @@
+26. Program to Check Opcode Error in a Given Job and Raise an Interrupt
+This program simulates checking for an opcode error in a given job. It compares each instruction’s opcode with a predefined set of valid opcodes. If an error is found, it raises an interrupt.
+c
+Copy code
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_INSTRUCTIONS 100
+#define MAX_OPCODE_LEN 10
+
+const char *valid_opcodes[] = {"ADD", "SUB", "MUL", "DIV", "MOV", "LOAD", "STORE"};
+int valid_opcode_count = sizeof(valid_opcodes) / sizeof(valid_opcodes[0]);
+
+int is_valid_opcode(char *opcode) {
+    for (int i = 0; i < valid_opcode_count; i++) {
+        if (strcmp(opcode, valid_opcodes[i]) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+int main() {
+    FILE *input;
+    char instruction[MAX_OPCODE_LEN];
+
+    input = fopen("job_instructions.txt", "r");
+    if (input == NULL) {
+        printf("Error opening file.\n");
+        return 1;
+    }
+
+    int line_number = 0;
+    while (fscanf(input, "%s", instruction) != EOF) {
+        line_number++;
+        if (!is_valid_opcode(instruction)) {
+            printf("Opcode error at line %d: %s\n", line_number, instruction);
+            printf("Interrupt raised due to invalid opcode.\n");
+            fclose(input);
+            return 1;
+        }
+    }
+
+    fclose(input);
+    printf("All opcodes are valid. No interrupt raised.\n");
+    return 0;
+}

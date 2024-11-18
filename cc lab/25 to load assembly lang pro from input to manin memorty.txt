@@ -1,0 +1,31 @@
+25. Program to Load Assembly Language Program (ALP) from Input File to Main Memory
+This C program demonstrates loading an ALP from an input file into an array simulating main memory.
+c
+Copy code
+#include <stdio.h>
+#include <string.h>
+
+#define MEMORY_SIZE 256
+
+int main() {
+    FILE *input;
+    char memory[MEMORY_SIZE][20];  // Array to simulate main memory
+    int memory_index = 0;
+
+    input = fopen("alp_program.txt", "r");
+    if (input == NULL) {
+        printf("Error opening input file.\n");
+        return 1;
+    }
+
+    while (fgets(memory[memory_index], sizeof(memory[memory_index]), input) != NULL) {
+        memory[memory_index][strcspn(memory[memory_index], "\n")] = 0;  // Remove newline
+        printf("Loaded instruction at memory[%d]: %s\n", memory_index, memory[memory_index]);
+        memory_index++;
+    }
+
+    fclose(input);
+    printf("Program loaded into main memory.\n");
+
+    return 0;
+}

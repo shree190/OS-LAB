@@ -1,0 +1,65 @@
+17. Optimal Page Replacement Algorithm
+This program calculates the number of page faults using the Optimal Page Replacement Algorithm.
+c
+Copy code
+#include <stdio.h>
+
+int findOptimal(int pages[], int n, int frames[], int num_frames, int index) {
+    int farthest = index, pos = -1;
+    for (int i = 0; i < num_frames; i++) {
+        int j;
+        for (j = index; j < n; j++) {
+            if (frames[i] == pages[j]) {
+                if (j > farthest) {
+                    farthest = j;
+                    pos = i;
+                }
+                break;
+            }
+        }
+        if (j == n)
+            return i;
+    }
+    return (pos == -1) ? 0 : pos;
+}
+
+int main() {
+    int n, num_frames;
+    printf("Enter number of pages: ");
+    scanf("%d", &n);
+
+    int pages[n];
+    printf("Enter page references:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d", &num_frames);
+
+    int frames[num_frames], faults = 0;
+    for (int i = 0; i < num_frames; i++)
+        frames[i] = -1;
+
+    for (int i = 0; i < n; i++) {
+        int found = 0;
+        for (int j = 0; j < num_frames; j++) {
+            if (frames[j] == pages[i]) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            if (frames[0] == -1) {
+                frames[faults % num_frames] = pages[i];
+            } else {
+                int pos = findOptimal(pages, n, frames, num_frames, i + 1);
+                frames[pos] = pages[i];
+            }
+            faults++;
+        }
+    }
+
+    printf("Total page faults: %d\n", faults);
+    return 0;
+}

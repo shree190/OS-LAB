@@ -1,0 +1,62 @@
+23. Student Database Management using Shell Script
+As this is a shell scripting task, here’s a simple Bash script that performs basic operations on a student database, including insertion, deletion, update, and search.
+bash
+Copy code
+#!/bin/bash
+
+DATABASE="students.txt"
+
+insert_student() {
+    echo -n "Enter student ID: "
+    read id
+    echo -n "Enter student name: "
+    read name
+    echo -n "Enter student grade: "
+    read grade
+    echo "$id $name $grade" >> $DATABASE
+    echo "Student added."
+}
+
+delete_student() {
+    echo -n "Enter student ID to delete: "
+    read id
+    grep -v "^$id " $DATABASE > temp.txt && mv temp.txt $DATABASE
+    echo "Student deleted."
+}
+
+update_student() {
+    echo -n "Enter student ID to update: "
+    read id
+    grep -v "^$id " $DATABASE > temp.txt
+    echo -n "Enter new name: "
+    read name
+    echo -n "Enter new grade: "
+    read grade
+    echo "$id $name $grade" >> temp.txt
+    mv temp.txt $DATABASE
+    echo "Student updated."
+}
+
+search_student() {
+    echo -n "Enter student ID to search: "
+    read id
+    grep "^$id " $DATABASE
+}
+
+while true; do
+    echo "1. Insert Student"
+    echo "2. Delete Student"
+    echo "3. Update Student"
+    echo "4. Search Student"
+    echo "5. Exit"
+    read -p "Choose an option: " option
+
+    case $option in
+        1) insert_student ;;
+        2) delete_student ;;
+        3) update_student ;;
+        4) search_student ;;
+        5) break ;;
+        *) echo "Invalid option" ;;
+    esac
+done
